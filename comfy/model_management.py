@@ -663,6 +663,7 @@ def minimum_inference_memory():
 
 def free_memory(memory_required, device, keep_loaded=[], for_dynamic=False, pins_required=0, ram_required=0):
     cleanup_models_gc()
+    comfy.memory_management.extra_ram_release(max(pins_required, ram_required))
     unloaded_model = []
     can_unload = []
     unloaded_models = []
@@ -1801,7 +1802,7 @@ def debug_memory_summary():
         return torch.cuda.memory.memory_summary()
     return ""
 
-class InterruptProcessingException(Exception):
+class InterruptProcessingException(BaseException):
     pass
 
 interrupt_processing_mutex = threading.RLock()
